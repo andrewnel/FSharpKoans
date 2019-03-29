@@ -93,7 +93,7 @@ module ``13: String manipulation`` =
 
     [<Test>]
     let ``14 String formatting: Multiple format specifiers`` () =
-        let result = sprintf __ 3 5 0.6 "in other words" 60
+        let result = sprintf "%d out of %d is %.1f, or (in other words) %d percent." 3 5 0.6 60
         result |> should equal "3 out of 5 is 0.6, or (in other words) 60 percent."
 
    // But that's not all! See the full set of formatting capabilities here:
@@ -104,10 +104,10 @@ module ``13: String manipulation`` =
     [<Test>]
     let ``15 You can use the "usual" C# string methods from F#`` () =
         let s = "  Dr Phil, PhD, MD, MC, Medicine Man  "
-        let ``first index of 'P'`` = s.FILL_ME_IN
-        let ``last index of 'P'`` = s.FILL_ME_IN
-        let ``lowercase version`` = s.FILL_ME_IN
-        let ``without surrounding space`` = s.FILL_ME_IN
+        let ``first index of 'P'`` = s.IndexOf 'P'
+        let ``last index of 'P'`` = s.IndexOf ('P',10)
+        let ``lowercase version`` = s.ToLower()
+        let ``without surrounding space`` = s.Trim()
         ``first index of 'P'`` |> should equal 5
         ``last index of 'P'`` |> should equal 11
         ``lowercase version`` |> should equal "  dr phil, phd, md, mc, medicine man  "
