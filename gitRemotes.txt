@@ -1,0 +1,4 @@
+﻿OriginalRepo    https://github.com/cynic/FSharpKoans.git (fetch)
+OriginalRepo    https://github.com/cynic/FSharpKoans.git (push)
+origin  https://github.com/andrewnel/FSharpKoans.git (fetch)
+origin  https://github.com/andrewnel/FSharpKoans.git (push)
