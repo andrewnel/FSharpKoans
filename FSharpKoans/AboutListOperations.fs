@@ -257,16 +257,16 @@ or something else), it's likely that you'll be able to use a fold.
     [<Test>]
     let ``16 Folding, the hard way`` () =
         let fold (f : 'a -> 'b -> 'a) (initialState : 'a) (xs : 'b list) : 'a =
-            let rec fol list e ns =
+            let rec fol list ns =
                 match list with
-                | [] -> ns + initialState
-                | hd::i::tl -> ns + fol tl i hd+i
-            fol xs 0 0  // write a function to do a fold.
+                | [] -> ns
+                | hd::i::tl ->f ns (fol tl (f hd i))
+            fol xs initialState   // write a function to do a fold.
         fold (+) 0 [1;2;3;4] |> should equal 10
         fold (*) 2 [1;2;3;4] |> should equal 48
-        //fold (fun state item -> sprintf "%s %s" state item) "items:" ["dog"; "cat"; "bat"; "rat"]
-        //|> should equal "items: dog cat bat rat"
-        //fold (fun state item -> state + float item + 0.5) 0.8 [1;3;5;7] |> should equal 18.8
+        fold (fun state item -> sprintf "%s %s" state item) "items:" ["dog"; "cat"; "bat"; "rat"]
+        |> should equal "items: dog cat bat rat"
+        fold (fun state item -> state + float item + 0.5) 0.8 [1.0;3.0;5.0;7.0] |> should equal 18.8
 
     // Hint: https://msdn.microsoft.com/en-us/library/ee353894.aspx
     [<Test>]
@@ -346,7 +346,14 @@ or something else), it's likely that you'll be able to use a fold.
     [<Test>]
     let ``22 tryPick: find the first matching element, if any, and transform it`` () =
         let tryPick (p : 'a -> 'b option) (xs : 'a list) : 'b option =
-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353814.aspx
+            let rec tPick list op = 
+                match list with 
+                | [] -> None
+                | a::rest -> 
+                    match (p a) with
+                    | Some a -> Some a
+                    | None -> tPick rest None
+            tPick xs None // Does this: https://msdn.microsoft.com/en-us/library/ee353814.aspx
         let f x =
             match x<=45 with
             | true -> Some(x*2)
@@ -376,7 +383,14 @@ or something else), it's likely that you'll be able to use a fold.
         // - why can't it take an 'a->'b, instead of an 'a->'b option ?
         // - why does it return a 'b list, and not a 'b list option ?
         let choose (p : 'a -> 'b option) (xs : 'a list) : 'b list =
-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353456.aspx
+            let rec tChoose list newList = 
+                match list with 
+                | [] -> newList
+                | a::rest -> 
+                    match (p a) with
+                    | Some a -> tChoose rest (a::newList)
+                    | None -> tChoose rest newList
+            List.rev (tChoose xs []) // Does this: https://msdn.microsoft.com/en-us/library/ee353456.aspx
         let f x =
             match x<=45 with
             | true -> Some(x*2)
